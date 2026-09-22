@@ -47,10 +47,12 @@ const Pedido = () => {
   const ConfirmarPedido = () => {
     setEnviar(true);
     setStatus("Restaurante confirmou pagamento, preparando seu pedido!")
+
     setTimeout(() => {
       setStatus("Seu pedido saiu para entrega!")
       setEnviar(false)
     }, 5000) // 5 segundos
+
     setTimeout(() => {
       setStatus("Seu pedido foi entregue com sucesso!")
       setEnviar(false)
@@ -58,9 +60,69 @@ const Pedido = () => {
   }
 
   return (
-    <>
+    <div>
+      <div>
+        <h2>Cardápio do Restaurante</h2>
 
-    </>
+        <div>
+          {produtosDisponiveis.map(produto => (
+            <div key={produto.id}>
+              <span>{produto.nome} - R${produto.preco.toFixed(2)}</span>
+
+              <div>
+                <button onClick={() => AlterarQuantidade(produto.id, -1)}>
+                -
+                </button>
+
+                <span>{produto.quantidade}</span>
+
+                <button onClick={() => AlterarQuantidade(produto.id, +1)}>
+                +
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <hr className="border-gray-200 my-4"/>
+      <div>
+        <h3>Resumo da entrega</h3>
+        {carrinho.length === 0 ?(
+          <p>Seu Carrinho está vazio</p>
+        ):(
+          <ul>
+            {carrinho.map(item => (
+              <li>
+                <span>{item.id} X {item.nome}</span>
+                <span>R$ {(item.preco * item.quantidade).toFixed(2)}</span>
+              </li>
+            ))}
+            <div>
+              <span>Subtotal</span>
+              <span>R${subTotal.toFixed(2)}</span>
+            </div>
+            <div>
+              <span>Taxa de Entrega</span>
+              <span>R${taxaEntrega.toFixed(2)}</span>
+            </div>
+            <div>
+              <span>Total a pagar</span>
+              <span>R${total.toFixed(2)}</span>
+            </div>
+
+            <button onClick={ConfirmarPedido}>
+              {enviar ? "Enviando" : "Confirmar Pedido"}
+            </button>
+            {status && (
+              <div>
+                <strong>Alerta:</strong>{status}
+              </div>
+            )}
+          </ul>
+
+        )}
+      </div>
+    </div>
   )
 }
 
